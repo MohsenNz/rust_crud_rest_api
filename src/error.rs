@@ -1,28 +1,27 @@
 use actix_web::{HttpResponse, ResponseError};
-use deadpool_postgres::PoolError;
 use derive_more::{Display, From};
-use tokio_pg_mapper::Error as PGMError;
-use tokio_postgres::error::Error as PGError;
+use sea_orm::DbErr;
 
 #[derive(Display, From, Debug)]
 pub enum MyError {
-    NotFound,
-    PGError(PGError),
-    PGMError(PGMError),
-    PoolError(PoolError),
+    NotFound(String),
+    DbErr(DbErr),
 }
 
 impl std::error::Error for MyError {}
 
 impl ResponseError for MyError {
     fn error_response(&self) -> HttpResponse {
-        match *self {
-            MyError::NotFound => HttpResponse::NotFound().finish(),
-            MyError::PGError(ref err) => HttpResponse::InternalServerError().body(err.to_string()),
-            MyError::PGMError(ref err) => HttpResponse::InternalServerError().body(err.to_string()),
-            MyError::PoolError(ref err) => {
-                HttpResponse::InternalServerError().body(err.to_string())
-            } // _ => HttpResponse::InternalServerError().finish(),
+        match self {
+            MyError::NotFound(err) => {
+                log::info!("NotFound: {}", err);
+                // HttpResponse::Accepted().finish()
+                HttpResponse::NotFound().finish()
+            }
+            MyError::DbErr(err) => {
+                log::error!("DbErr: {}", err.to_string());
+                HttpResponse::InternalServerError().finish()
+            }
         }
     }
 }

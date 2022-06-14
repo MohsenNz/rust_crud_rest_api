@@ -3,17 +3,40 @@ name = "rust_crud_restapi"
 version = "0.1.0"
 edition = "2021"
 
+[workspace]
+members = [".", "entity", "migration"]
+
 [dependencies]
 actix-web = "4"
-config = "0.11.0"
-deadpool-postgres = { version = "0.10.1", features = ["serde"] }
-derive_more = "0.99.2"
 dotenv = "0.15.0"
+config = "0.13.1"
+derive_more = "0.99.2"
 serde = { version = "1.0.104", features = ["derive"] }
-tokio-pg-mapper = "0.2.0"
-tokio-pg-mapper-derive = "0.2.0"
-tokio-postgres = { version = "0.7.6", features = ["array-impls", "with-chrono-0_4"] }
+chrono = { version = "0.4.19", features = ["serde"] }
 log = "0.4.17"
 env_logger = "0.9.0"
-chrono = { version = "0.4.19", features = ["serde"] }
-refinery = { version = "0.8", features = ["tokio-postgres"]}
+entity = { path = "entity" }
+migration = { path = "migration" }
+
+[dependencies.sea-orm]
+version = "^0.8"
+features = [ 
+  "sqlx-postgres", 
+  "runtime-actix-native-tls", 
+  "macros",
+  "with-chrono",
+]
+
+[dev-dependencies.sea-orm]
+version = "^0.8"
+features = ["mock"]
+
+[dev-dependencies]
+actix-rt = "2.7.0"
+lazy_static = "1.4.0"
+async_once = "0.2.6"
+actix-http = "3.1.0"
+
+[features]
+# default = ["seaorm-mock"]
+# seaorm-mock = ["sea-orm/mock"]
