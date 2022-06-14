@@ -37,6 +37,7 @@ The application itself has been designed with a modular approach. Dividing this 
 
 File structre inspired by nestjs. like this src:
 
+```
 src
 ├── config.rs
 ├── error.rs
@@ -47,6 +48,8 @@ src
     ├── dto.rs
     ├── mod.rs
     └── service.rs
+
+```
 
 - `main.rs`, tried to keep simple. it's contain Initialize of other modules, and run http-server.
 - `lib.rs` expose API for tests.
