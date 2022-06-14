@@ -15,7 +15,6 @@ impl ResponseError for MyError {
         match self {
             MyError::NotFound(err) => {
                 log::info!("NotFound: {}", err);
-                // HttpResponse::Accepted().finish()
                 HttpResponse::NotFound().finish()
             }
             MyError::DbErr(err) => {
