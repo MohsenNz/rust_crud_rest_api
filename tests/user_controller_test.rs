@@ -97,7 +97,7 @@ macro_rules! _init_service {
     };
 }
 
-#[actix_rt::test]
+#[actix_web::test]
 async fn get_user_returns_200_when_user_exists() {
     let (state, seed_immut, _) = STATE_SEED.get().await.clone();
     let mut app = init_service(state).await;
@@ -112,7 +112,7 @@ async fn get_user_returns_200_when_user_exists() {
     }
 }
 
-#[actix_rt::test]
+#[actix_web::test]
 async fn get_user_returns_404_when_not_found() {
     let (state, _, _) = STATE_SEED.get().await.clone();
     let mut app = init_service(state).await;
@@ -125,7 +125,7 @@ async fn get_user_returns_404_when_not_found() {
     assert_eq!(resp.status(), http::StatusCode::NOT_FOUND);
 }
 
-#[actix_rt::test]
+#[actix_web::test]
 async fn post_user_returns_200_when_user_is_valid() {
     let (state, _, _) = STATE_SEED.get().await.clone();
     let mut app = init_service(state).await;
@@ -145,7 +145,7 @@ async fn post_user_returns_200_when_user_is_valid() {
     assert_eq!(resp.status(), http::StatusCode::OK)
 }
 
-#[actix_rt::test]
+#[actix_web::test]
 async fn post_user_returns_500_when_user_already_exists() {
     let (state, seed_immut, _) = STATE_SEED.get().await.clone();
     let mut app = init_service(state).await;
@@ -166,7 +166,7 @@ async fn post_user_returns_500_when_user_already_exists() {
     assert_eq!(resp.status(), http::StatusCode::INTERNAL_SERVER_ERROR)
 }
 
-#[actix_rt::test]
+#[actix_web::test]
 async fn put_user_returns_200_when_user_exists() {
     let (state, _, seed_mut) = STATE_SEED.get().await.clone();
     let mut app = init_service(state).await;
@@ -187,7 +187,7 @@ async fn put_user_returns_200_when_user_exists() {
     assert_eq!(resp.status(), http::StatusCode::OK)
 }
 
-#[actix_rt::test]
+#[actix_web::test]
 async fn put_user_returns_404_when_user_does_not_exist() {
     let (state, _, _) = STATE_SEED.get().await.clone();
     let mut app = init_service(state).await;
@@ -207,7 +207,7 @@ async fn put_user_returns_404_when_user_does_not_exist() {
     assert_eq!(resp.status(), http::StatusCode::NOT_FOUND)
 }
 
-#[actix_rt::test]
+#[actix_web::test]
 async fn delete_user_returns_200_when_user_exists() {
     let (state, _, seed_mut) = STATE_SEED.get().await.clone();
     let mut app = init_service(state).await;
@@ -222,7 +222,7 @@ async fn delete_user_returns_200_when_user_exists() {
     assert_eq!(resp.status(), http::StatusCode::OK)
 }
 
-#[actix_rt::test]
+#[actix_web::test]
 async fn delete_user_returns_404_when_user_does_not_exist() {
     let (state, _, _) = STATE_SEED.get().await.clone();
     let mut app = init_service(state).await;

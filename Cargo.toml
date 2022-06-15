@@ -32,7 +32,6 @@ version = "^0.8"
 features = ["mock"]
 
 [dev-dependencies]
-actix-rt = "2.7.0"
 actix-http = "3.1.0"
 lazy_static = "1.4.0"
 async_once = "0.2.6"
