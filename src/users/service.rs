@@ -6,15 +6,50 @@ use sea_orm::{
     QueryFilter, Set,
 };
 
-pub async fn add_user(db: &DatabaseConnection, user_info: UserDto) -> Result<String, MyError> {
+pub async fn add_user(db: &DatabaseConnection, user_info: UserDto) -> Result<user::Model, MyError> {
     let user = user_info.into_active_model();
 
-    let phone_number = user.insert(db).await?.phone_number;
+    let user = user.insert(db).await?;
 
-    Ok(phone_number)
+    Ok(user)
 }
 
-pub async fn get_user_by_phone_number(
+pub async fn get_user_by_id(db: &DatabaseConnection, id: i32) -> Result<user::Model, MyError> {
+    user::Entity::find_by_id(id)
+        .one(db)
+        .await
+        .map_err(MyError::DbErr)?
+        .ok_or("User not found!".into())
+        .map_err(MyError::NotFound)
+}
+
+pub async fn update_user(
+    db: &DatabaseConnection,
+    id: i32,
+    user_info: UserDto,
+) -> Result<user::Model, MyError> {
+    let mut user = user_info.into_active_model();
+    user.id = Set(id);
+
+    // let mut user: user::ActiveModel = user.unwrap().into();
+    // let now = chrono::offset::Utc::now();
+    // user.id = Set(id);
+    // user.first_name = Set(user_info.first_name);
+    // user.last_name = Set(user_info.last_name);
+    // user.datetime_utc = Set(now.naive_utc());
+
+    let user = user.update(db).await?;
+
+    Ok(user)
+}
+
+pub async fn delete_user(db: &DatabaseConnection, id: i32) -> Result<bool, MyError> {
+    let user = get_user_by_id(db, id).await?;
+    let res = user.delete(db).await?;
+    Ok(res.rows_affected > 0)
+}
+
+pub async fn _get_user_by_phone_number(
     db: &DatabaseConnection,
     phone_number: &str,
 ) -> Result<user::Model, MyError> {
@@ -25,32 +60,6 @@ pub async fn get_user_by_phone_number(
         .map_err(MyError::DbErr)?
         .ok_or("User not found!".into())
         .map_err(MyError::NotFound)
-}
-
-pub async fn update_user(db: &DatabaseConnection, user_info: UserDto) -> Result<String, MyError> {
-    let id = get_user_by_phone_number(db, &user_info.phone_number)
-        .await?
-        .id;
-
-    let mut user = user_info.into_active_model();
-    user.id = Set(id);
-
-    // let user = get_user_by_phone_number(db, &user_info.phone_number).await?
-    // let mut user: user::ActiveModel = user.unwrap().into();
-    // let now = chrono::offset::Utc::now();
-    // user.first_name = Set(user_info.first_name);
-    // user.last_name = Set(user_info.last_name);
-    // user.datetime_utc = Set(now.naive_utc());
-
-    let user = user.update(db).await?;
-
-    Ok(user.phone_number)
-}
-
-pub async fn delete_user(db: &DatabaseConnection, phone_number: &str) -> Result<bool, MyError> {
-    let user = get_user_by_phone_number(db, phone_number).await?;
-    let res = user.delete(db).await?;
-    Ok(res.rows_affected > 0)
 }
 
 // #[cfg(test)]

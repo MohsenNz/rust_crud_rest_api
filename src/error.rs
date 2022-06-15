@@ -17,6 +17,10 @@ impl ResponseError for MyError {
                 log::info!("NotFound: {}", err);
                 HttpResponse::NotFound().finish()
             }
+            MyError::DbErr(DbErr::RecordNotFound(err)) => {
+                log::info!("NotFound: {}", err);
+                HttpResponse::NotFound().finish()
+            }
             MyError::DbErr(err) => {
                 log::error!("DbErr: {}", err.to_string());
                 HttpResponse::InternalServerError().finish()

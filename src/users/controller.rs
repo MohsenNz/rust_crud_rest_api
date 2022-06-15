@@ -7,38 +7,39 @@ pub async fn add_user(
     user: web::Json<UserDto>,
     db: web::Data<DatabaseConnection>,
 ) -> Result<HttpResponse, Error> {
-    let _new_user_id = service::add_user(&db, user.clone()).await?;
+    let new_user = service::add_user(&db, user.clone()).await?;
 
-    Ok(HttpResponse::Ok().json(user))
+    Ok(HttpResponse::Ok().json(new_user))
 }
 
-#[put("/")]
+#[put("/{id}")]
 pub async fn update_user(
+    id: web::Path<i32>,
     user: web::Json<UserDto>,
     db: web::Data<DatabaseConnection>,
 ) -> Result<HttpResponse, Error> {
     let user = user.into_inner();
-    let updated_user_phone = service::update_user(&db, user).await?;
+    let updated_user = service::update_user(&db, *id, user).await?;
 
-    Ok(HttpResponse::Ok().json(updated_user_phone))
+    Ok(HttpResponse::Ok().json(updated_user))
 }
 
-#[get("/{phone_number}")]
+#[get("/{id}")]
 pub async fn get_user(
-    phone_number: web::Path<String>,
+    id: web::Path<i32>,
     db: web::Data<DatabaseConnection>,
 ) -> Result<HttpResponse, Error> {
-    let user = service::get_user_by_phone_number(&db, &phone_number).await?;
+    let user = service::get_user_by_id(&db, *id).await?;
 
     Ok(HttpResponse::Ok().json(user))
 }
 
-#[delete("/{phone_number}")]
+#[delete("/{id}")]
 pub async fn delete_user(
-    phone_number: web::Path<String>,
+    id: web::Path<i32>,
     db: web::Data<DatabaseConnection>,
 ) -> Result<HttpResponse, Error> {
-    let is_deleted = service::delete_user(&db, &phone_number).await?;
+    let _ = service::delete_user(&db, *id).await?;
 
-    Ok(HttpResponse::Ok().json(is_deleted))
+    Ok(HttpResponse::Ok().finish())
 }

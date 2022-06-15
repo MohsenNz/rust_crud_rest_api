@@ -21,10 +21,9 @@ It's REST and it's:
 
 |Operation  |Method  |Endpoint                    |Body                                   |
 |-----------|--------|----------------------------|---------------------------------------|
-|Create     |POST    |`/api/user/`                |`{<field_1>:<value>, ... }`            |
+|Create     |POST    |`/api/user/`                |`json user dto`                        |
 |Get        |GET     |`/api/user/:phone_number`   |                                       |
-|Get all    |GET     |`/api/user/`                |                                       |
-|Update     |PUT     |`/api/user/:phone_number`   |`{<updated_field>:<new_value>, ... }`  |
+|Update     |PUT     |`/api/user/:phone_number`   |`json user dto`                        |
 |Delete     |DELETE  |`/api/user/:phone_number`   |                                       |
 
 ## Data Design and Entites

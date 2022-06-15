@@ -14,8 +14,6 @@ use lazy_static::lazy_static;
 use rust_crud_restapi::users;
 use sea_orm::{ActiveModelTrait, DatabaseConnection, Set};
 use serde::{Deserialize, Serialize};
-// use crate::randomize_string;
-// use uuid::Uuid;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct UserDto {
@@ -106,7 +104,7 @@ async fn get_user_returns_200_when_user_exists() {
 
     for user in seed_immut {
         let req = test::TestRequest::get()
-            .uri(&format!("/api/user/{}", user.phone_number))
+            .uri(&format!("/api/user/{}", user.id))
             .to_request();
 
         let resp = test::call_service(&mut app, req).await;
@@ -120,7 +118,7 @@ async fn get_user_returns_404_when_not_found() {
     let mut app = init_service(state).await;
 
     let req = test::TestRequest::get()
-        .uri("/api/user/n0t-f0un5")
+        .uri(&format!("/api/user/{}", 100))
         .to_request();
 
     let resp = test::call_service(&mut app, req).await;
@@ -181,7 +179,7 @@ async fn put_user_returns_200_when_user_exists() {
     };
 
     let req = test::TestRequest::put()
-        .uri("/api/user/")
+        .uri(&format!("/api/user/{}", seed_user.id))
         .set_json(&user)
         .to_request();
 
@@ -195,13 +193,13 @@ async fn put_user_returns_404_when_user_does_not_exist() {
     let mut app = init_service(state).await;
 
     let user = UserDto {
-        phone_number: "00000000".to_owned(),
-        first_name: "______".to_owned(),
-        last_name: "______".to_owned(),
+        phone_number: "0".to_owned(),
+        first_name: "_".to_owned(),
+        last_name: "_".to_owned(),
     };
 
     let req = test::TestRequest::put()
-        .uri("/api/user/")
+        .uri(&format!("/api/user/{}", 100))
         .set_json(&user)
         .to_request();
 
@@ -215,10 +213,10 @@ async fn delete_user_returns_200_when_user_exists() {
     let mut app = init_service(state).await;
 
     let user = &seed_mut[2];
-    let phone_number = &user.phone_number;
 
-    let uri = format!("/api/user/{}", phone_number);
-    let req = test::TestRequest::delete().uri(&uri).to_request();
+    let req = test::TestRequest::delete()
+        .uri(&format!("/api/user/{}", &user.id))
+        .to_request();
 
     let resp = test::call_service(&mut app, req).await;
     assert_eq!(resp.status(), http::StatusCode::OK)
@@ -229,10 +227,9 @@ async fn delete_user_returns_404_when_user_does_not_exist() {
     let (state, _, _) = STATE_SEED.get().await.clone();
     let mut app = init_service(state).await;
 
-    let phone_number = "000000000";
-
-    let uri = format!("/api/user/{}", phone_number);
-    let req = test::TestRequest::delete().uri(&uri).to_request();
+    let req = test::TestRequest::delete()
+        .uri(&format!("/api/user/{}", 100))
+        .to_request();
 
     let resp = test::call_service(&mut app, req).await;
     assert_eq!(resp.status(), http::StatusCode::NOT_FOUND)
