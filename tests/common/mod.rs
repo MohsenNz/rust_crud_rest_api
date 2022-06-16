@@ -1,5 +1,5 @@
 use migration::{Migrator, MigratorTrait};
-use rust_crud_restapi::config;
+use rust_crud_rest_api::config;
 use sea_orm::DatabaseConnection;
 
 pub async fn init_app_state() -> DatabaseConnection {

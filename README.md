@@ -19,12 +19,12 @@ This porject illustrates:
 
 It's REST and it's:
 
-|Operation  |Method  |Endpoint                    |Body                                   |
-|-----------|--------|----------------------------|---------------------------------------|
-|Create     |POST    |`/api/user/`                |`json user dto`                        |
-|Get        |GET     |`/api/user/:phone_number`   |                                       |
-|Update     |PUT     |`/api/user/:phone_number`   |`json user dto`                        |
-|Delete     |DELETE  |`/api/user/:phone_number`   |                                       |
+|Operation      |Method  |Endpoint                    |Body               |
+|---------------|--------|----------------------------|-------------------|
+|Add user       |POST    |`/api/user/`                |`json user dto`    |
+|Get user       |GET     |`/api/user/:phone_number`   |                   |
+|Update user    |PUT     |`/api/user/:phone_number`   |`json user dto`    |
+|Delete user    |DELETE  |`/api/user/:phone_number`   |                   |
 
 ## Data Design and Entites
 
@@ -81,7 +81,7 @@ This application uses an integration testing. These test serve as an example for
 2. Create database
 
    ```shell
-   createdb -O postgres testing_db
+   createdb -O postgres rust_crud_rest_api
    ```
 
 4. Rename `.env.sample` to `.env`.
@@ -95,13 +95,13 @@ This application uses an integration testing. These test serve as an example for
 6. Using a different terminal send an HTTP POST request to the running server:
 
    ```shell
-   echo '{"phone_number": "09127274356", "first_name": "marco", "last_name": "rues"}' | http -f --json --print h POST http://127.0.0.1:8080/users
+   echo '{"phone_number": "09127274356", "first_name": "marco", "last_name": "rues"}' | http -f --json --print h POST http://127.0.0.1:8080/api/user/
    ```
 
    **...or using curl...**
 
    ```shell
-   curl -d '{"phone_number": "09127274356", "first_name": "marco", "last_name": "ruse"}' -H 'Content-Type: application/json' http://127.0.0.1:8080/users
+   curl -d '{"phone_number": "09127274356", "first_name": "marco", "last_name": "ruse"}' -H 'Content-Type: application/json' http://127.0.0.1:8080/api/user/
    ```
 
    A unique constraint exists for phone_number, so sending this request twice will return an internal server error (HTTP 500).

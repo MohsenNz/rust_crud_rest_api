@@ -4,7 +4,7 @@ use dotenv::dotenv;
 use env_logger::Env;
 use log::info;
 use migration::{Migrator, MigratorTrait};
-use rust_crud_restapi::{config, users};
+use rust_crud_rest_api::{config, users};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

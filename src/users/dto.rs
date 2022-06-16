@@ -1,4 +1,4 @@
-use entity::user;
+use entity::users::prelude::*;
 use sea_orm::Set;
 use serde::{Deserialize, Serialize};
 
@@ -9,14 +9,12 @@ pub struct UserDto {
     pub last_name: String,
 }
 
-impl user::IntoActiveModel for UserDto {
-    fn into_active_model(self) -> user::ActiveModel {
-        let now = chrono::offset::Utc::now();
-        user::ActiveModel {
+impl UserDto {
+    pub fn into_active_model(self) -> UsersActiveModel {
+        UsersActiveModel {
             phone_number: Set(self.phone_number.to_owned()),
             first_name: Set(self.first_name.to_owned()),
             last_name: Set(self.last_name.to_owned()),
-            datetime_utc: Set(now.naive_utc()),
             ..Default::default()
         }
     }

@@ -1,12 +1,12 @@
 use super::dto::UserDto;
 use crate::error::MyError;
-use entity::user::{self, IntoActiveModel};
+use entity::users::prelude::*;
 use sea_orm::{
     entity::ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, ModelTrait,
     QueryFilter, Set,
 };
 
-pub async fn add_user(db: &DatabaseConnection, user_info: UserDto) -> Result<user::Model, MyError> {
+pub async fn add_user(db: &DatabaseConnection, user_info: UserDto) -> Result<UsersModel, MyError> {
     let user = user_info.into_active_model();
 
     let user = user.insert(db).await?;
@@ -14,8 +14,8 @@ pub async fn add_user(db: &DatabaseConnection, user_info: UserDto) -> Result<use
     Ok(user)
 }
 
-pub async fn get_user_by_id(db: &DatabaseConnection, id: i32) -> Result<user::Model, MyError> {
-    user::Entity::find_by_id(id)
+pub async fn get_user_by_id(db: &DatabaseConnection, id: i32) -> Result<UsersModel, MyError> {
+    Users::find_by_id(id)
         .one(db)
         .await
         .map_err(MyError::DbErr)?
@@ -27,7 +27,7 @@ pub async fn update_user(
     db: &DatabaseConnection,
     id: i32,
     user_info: UserDto,
-) -> Result<user::Model, MyError> {
+) -> Result<UsersModel, MyError> {
     let mut user = user_info.into_active_model();
     user.id = Set(id);
 
@@ -52,9 +52,9 @@ pub async fn delete_user(db: &DatabaseConnection, id: i32) -> Result<bool, MyErr
 pub async fn _get_user_by_phone_number(
     db: &DatabaseConnection,
     phone_number: &str,
-) -> Result<user::Model, MyError> {
-    user::Entity::find()
-        .filter(user::Column::PhoneNumber.eq(phone_number))
+) -> Result<UsersModel, MyError> {
+    Users::find()
+        .filter(UsersColumn::PhoneNumber.eq(phone_number))
         .one(db)
         .await
         .map_err(MyError::DbErr)?
@@ -84,16 +84,16 @@ pub async fn _get_user_by_phone_number(
 //     //     )
 //     // });
 
-//     fn setup() -> (DatabaseConnection, Vec<Vec<user::Model>>) {
+//     fn setup() -> (DatabaseConnection, Vec<Vec<UsersModel>>) {
 //         let page1 = vec![
-//             user::Model {
+//             UsersModel {
 //                 id: 1,
 //                 phone_number: "0912333457".into(),
 //                 first_name: "milad".into(),
 //                 last_name: "rezaee".into(),
 //                 datetime_utc: NaiveDate::from_ymd(2020, 7, 8).and_hms(8, 10, 11),
 //             },
-//             user::Model {
+//             UsersModel {
 //                 id: 2,
 //                 phone_number: "09173255431".into(),
 //                 first_name: "ehsan".into(),
@@ -102,7 +102,7 @@ pub async fn _get_user_by_phone_number(
 //             },
 //         ];
 
-//         let page2 = vec![user::Model {
+//         let page2 = vec![UsersModel {
 //             id: 3,
 //             phone_number: "09374565431".into(),
 //             first_name: "ahmad".into(),
@@ -110,7 +110,7 @@ pub async fn _get_user_by_phone_number(
 //             datetime_utc: NaiveDate::from_ymd(2020, 9, 10).and_hms(9, 11, 9),
 //         }];
 
-//         let page3 = Vec::<user::Model>::new();
+//         let page3 = Vec::<UsersModel>::new();
 
 //         let db = MockDatabase::new(DbBackend::Postgres)
 //             .append_query_results(vec![page1.clone(), page2.clone(), page3.clone()])
@@ -139,7 +139,7 @@ pub async fn _get_user_by_phone_number(
 //             pages[1][0].clone()
 //         );
 //         // assert_eq!(
-//         //     user::Entity::find()
+//         //     Users::find()
 //         //         .filter(user::Column::PhoneNumber.contains("0912333457"))
 //         //         .one(&db)
 //         //         .await
@@ -148,7 +148,7 @@ pub async fn _get_user_by_phone_number(
 //         // );
 
 //         // assert_eq!(
-//         //     user::Entity::find()
+//         //     Users::find()
 //         //         .from_raw_sql(Statement::from_sql_and_values(
 //         //             DbBackend::Postgres,
 //         //             r#"SELECT * FROM "users2" WHERE "phone_number" = $1"#,

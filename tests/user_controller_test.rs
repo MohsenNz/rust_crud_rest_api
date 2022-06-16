@@ -9,9 +9,9 @@ use actix_web::{
 };
 use async_once::AsyncOnce;
 use common::init_app_state;
-use entity::user;
+use entity::users::prelude::*;
 use lazy_static::lazy_static;
-use rust_crud_restapi::users;
+use rust_crud_rest_api::users;
 use sea_orm::{ActiveModelTrait, DatabaseConnection, Set};
 use serde::{Deserialize, Serialize};
 
@@ -23,38 +23,38 @@ pub struct UserDto {
 }
 
 lazy_static! {
-    static ref STATE_SEED: AsyncOnce<(Data<DatabaseConnection>, Vec<user::Model>, Vec<user::Model>)> =
+    static ref STATE_SEED: AsyncOnce<(Data<DatabaseConnection>, Vec<UsersModel>, Vec<UsersModel>)> =
         AsyncOnce::new(async {
             let db = init_app_state().await;
 
-            let page1 = vec![user::ActiveModel {
+            let page1 = vec![UsersActiveModel {
                 phone_number: Set("09175142172".to_owned()),
                 first_name: Set("Lucifer".to_owned()),
                 last_name: Set("Morning star".to_owned()),
-                datetime_utc: Set(chrono::NaiveDate::from_ymd(2021, 2, 8).and_hms(10, 1, 1)),
+                // datetime_utc: Set(chrono::NaiveDate::from_ymd(2021, 2, 8).and_hms(10, 1, 1)),
                 ..Default::default()
             }];
 
             let page2 = vec![
-                user::ActiveModel {
+                UsersActiveModel {
                     phone_number: Set("09183654123".to_owned()),
                     first_name: Set("Amendiel".to_owned()),
                     last_name: Set("Angle".to_owned()),
-                    datetime_utc: Set(chrono::NaiveDate::from_ymd(2020, 7, 8).and_hms(8, 10, 11)),
+                    // datetime_utc: Set(chrono::NaiveDate::from_ymd(2020, 7, 8).and_hms(8, 10, 11)),
                     ..Default::default()
                 },
-                user::ActiveModel {
+                UsersActiveModel {
                     phone_number: Set("09128123471".to_owned()),
                     first_name: Set("Cloey".to_owned()),
                     last_name: Set("Deker".to_owned()),
-                    datetime_utc: Set(chrono::NaiveDate::from_ymd(2021, 3, 10).and_hms(2, 12, 1)),
+                    // datetime_utc: Set(chrono::NaiveDate::from_ymd(2021, 3, 10).and_hms(2, 12, 1)),
                     ..Default::default()
                 },
-                user::ActiveModel {
+                UsersActiveModel {
                     phone_number: Set("09173012954".to_owned()),
                     first_name: Set("Mazakin".to_owned()),
                     last_name: Set("Evil".to_owned()),
-                    datetime_utc: Set(chrono::NaiveDate::from_ymd(2019, 7, 11).and_hms(1, 1, 10)),
+                    // datetime_utc: Set(chrono::NaiveDate::from_ymd(2019, 7, 11).and_hms(1, 1, 10)),
                     ..Default::default()
                 },
             ];
