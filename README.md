@@ -19,12 +19,12 @@ This porject illustrates:
 
 It's REST and it's:
 
-|Operation      |Method  |Endpoint                    |Body               |
-|---------------|--------|----------------------------|-------------------|
-|Add user       |POST    |`/api/user/`                |`json user dto`    |
-|Get user       |GET     |`/api/user/:phone_number`   |                   |
-|Update user    |PUT     |`/api/user/:phone_number`   |`json user dto`    |
-|Delete user    |DELETE  |`/api/user/:phone_number`   |                   |
+|Operation      |Method  |Endpoint          |Body               |
+|---------------|--------|------------------|-------------------|
+|Add user       |POST    |`/api/user/`      |`json user dto`    |
+|Get user       |GET     |`/api/user/:id`   |                   |
+|Update user    |PUT     |`/api/user/:id`   |`json user dto`    |
+|Delete user    |DELETE  |`/api/user/:id`   |                   |
 
 ## Data Design and Entites
 
